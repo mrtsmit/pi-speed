@@ -14,8 +14,9 @@ WAIT1 = 0.2		# used in display_1 and display_2
 WAIT2 = 0.001	# used in display_3
 
 segCode = [0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f]  #0~9  
-pins = [11,12,13,15,16,18,22,7,3,5,24,26]  
+pins = [11,12,13,15,16,18,22,7,3,5,24,26,37]  
 bits = [BIT0, BIT1, BIT2, BIT3]  
+GPIO_BLUE_LIGHT = 37
 
 def print_msg():  
 	print 'Program is running...'  
@@ -100,20 +101,31 @@ def display_3(num):
 	else:  
 		 print 'Out of range, num should be 0~9999 !'  
 
+def led_blue_on():
+  #debug_message(debug, ">>> Turn Blue ON")
+  GPIO.output(GPIO_BLUE_LIGHT, True)
+
+def led_blue_off():
+  #debug_message(debug, ">>> Turn Blue OFF")
+  GPIO.output(GPIO_BLUE_LIGHT, False)
+
 def setup():  
-	GPIO.setmode(GPIO.BOARD)    #Number GPIOs by its physical location  
+	GPIO.setmode(GPIO.BOARD)    #Number GPIOs by its physical location 
+	GPIO.setup(GPIO_BLUE_LIGHT, GPIO.OUT) 
 	GPIO.setwarnings(False)
+	led_blue_on()
 	for pin in pins:  
 		GPIO.setup(pin, GPIO.OUT)    #set all pins' mode is output  
 		GPIO.output(pin, GPIO.HIGH)  #set all pins are high level(3.3V)  
 	display_1()
 	display_2()
+	led_blue_off()
 
 def loop():  
 	while True:
 		for pin in pins:
 			GPIO.output(pin, GPIO.LOW)  
-		# MEASURING LED on
+		led_blue_on() # MEASURING LED on
 		downspeed = 0
 		print "Measuring download speed ..."
 		try:
@@ -123,7 +135,7 @@ def loop():
 			downspeed = 0
 			pass
 		print downspeed
-		# MEASURING LED off
+		led_blue_off()  # MEASURING LED off
 		for i in range(264000): # about every 15 minutes, with "WAIT2 = 0.001"
 #		for i in range(4000): # quick, about every 30 seconds
 			display_3(downspeed)  

@@ -8,8 +8,9 @@ from datetime import datetime
 result = subprocess.check_output([sys.executable, "speedtest.py", "--csv", "--no-upload"])
 # result = '11643,Hart Telephone Co,"Hartwell, GA",2019-10-04T18:43:18.942285Z,76.19543202040536,49.86,51735109.37702047,38481317.19396705,,170.34.104.9'
 # multiplier = 5.2
+multiplier = 5.5
 # multiplier = 6.7
-multiplier = 8.6
+# multiplier = 8.6
 mylist = re.split(',', result)
 host = mylist[1]
 ping = round(float(mylist[6]), 1)
